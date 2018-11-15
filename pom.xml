@@ -32,6 +32,13 @@
     <url>https://github.com/lightstep/lightstep-opencensus-exporter</url>
   </scm>
 
+  <distributionManagement>
+    <repository>
+      <id>lightstep-bintray</id>
+      <url>https://api.bintray.com/maven/lightstep/maven/lightstep-opencensus-exporter/;publish=1</url>
+    </repository>
+  </distributionManagement>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
