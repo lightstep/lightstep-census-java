@@ -32,6 +32,13 @@
     <url>https://github.com/lightstep/lightstep-opencensus-exporter</url>
   </scm>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
   <distributionManagement>
     <repository>
       <id>lightstep-bintray</id>
