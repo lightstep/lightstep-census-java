@@ -1,3 +1,5 @@
+[![Apache-2.0 license](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 # LightStep OpenCensus Trace Exporter
 
 The LightStep OpenCensus Trace Exporter is a trace exporter that exports data to LightStep.
