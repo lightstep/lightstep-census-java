@@ -1,4 +1,4 @@
-[![Apache-2.0 license](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Apache-2.0 license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # LightStep OpenCensus Trace Exporter
 
