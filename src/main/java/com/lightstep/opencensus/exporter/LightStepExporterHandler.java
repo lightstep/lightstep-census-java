@@ -51,6 +51,10 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
 
     try {
       for (SpanData spanData : spanDataList) {
+        if ("Sent.lightstep.collector.CollectorService.Report".equals(spanData.getName())) {
+          // Skip LS internal span
+          continue;
+        }
         long startTimestamp = toEpochMicros(spanData.getStartTimestamp());
         long endTimestamp = toEpochMicros(spanData.getEndTimestamp());
         SpanContext context = spanData.getContext();
