@@ -1,4 +1,4 @@
-[![Apache-2.0 license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Released Version][maven-img]][maven] [![Apache-2.0 license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # LightStep OpenCensus Trace Exporter
 
@@ -17,7 +17,7 @@ pom.xml
 <dependency>
     <groupId>io.opencensus</groupId>
     <artifactId>opencensus-impl</artifactId>
-    <version>0.16.1</version>
+    <version>0.19.0</version>
     <scope>runtime</scope>
 </dependency>
 ```
@@ -37,3 +37,6 @@ LightStepTraceExporter.createAndRegister(jreTracer);
 ## License
 
 [Apache 2.0 License](./LICENSE).
+
+[maven-img]: https://img.shields.io/maven-central/v/com.lightstep.opencensus/lightstep-opencensus-exporter.svg
+[maven]: http://search.maven.org/#search%7Cga%7C1%7Clightstep-opencensus-exporter  
