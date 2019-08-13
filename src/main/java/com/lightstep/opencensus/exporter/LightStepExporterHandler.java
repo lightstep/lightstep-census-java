@@ -26,7 +26,9 @@ import io.opencensus.trace.samplers.Samplers;
 import io.opentracing.tag.Tags;
 import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class LightStepExporterHandler extends SpanExporter.Handler {
   private static final String STATUS_CODE = "census.status_code";
@@ -87,14 +89,25 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
         }
 
         for (TimedEvent<Annotation> annotation : spanData.getAnnotations().getEvents()) {
-          span.log(toEpochMicros(annotation.getTimestamp()),
-              annotation.getEvent().getDescription());
+          Map<String, Object> fields = new HashMap<>();
+          fields.put("annotationDescription", annotation.getEvent().getDescription());
+          if (annotation.getEvent().getAttributes() != null) {
+            for (Entry<String, AttributeValue> entry : annotation.getEvent()
+                .getAttributes().entrySet()) {
+              fields.put(entry.getKey(), getAttributeValue(entry.getValue()));
+            }
+          }
+          span.log(toEpochMicros(annotation.getTimestamp()), fields);
         }
 
         for (TimedEvent<io.opencensus.trace.MessageEvent> messageEvent :
             spanData.getMessageEvents().getEvents()) {
-          span.log(
-              toEpochMicros(messageEvent.getTimestamp()), messageEvent.getEvent().getType().name());
+          Map<String, Object> fields = new HashMap<>();
+          fields.put("messageEventType", messageEvent.getEvent().getType().name());
+          fields.put("compressedMessageSize", messageEvent.getEvent().getCompressedMessageSize());
+          fields
+              .put("uncompressedMessageSize", messageEvent.getEvent().getUncompressedMessageSize());
+          span.log(toEpochMicros(messageEvent.getTimestamp()), fields);
         }
 
         span.finish(endTimestamp);
@@ -116,6 +129,15 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
         longAttributeConverter(span, tagName),
         //doubleAttributeConverter(span, tagName),
         defaultAttributeConverter(span, tagName));
+  }
+
+  private static Object getAttributeValue(AttributeValue attributeValue) {
+    return attributeValue.match(
+        stringAttributeConverter(),
+        booleanAttributeConverter(),
+        longAttributeConverter(),
+        //doubleAttributeConverter(span, tagName),
+        defaultAttributeConverter());
   }
 
   private static String toSpanKind(SpanData spanData) {
@@ -170,12 +192,30 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
     };
   }
 
+  private static Function<? super String, Object> stringAttributeConverter() {
+    return new Function<String, Object>() {
+      @Override
+      public String apply(final String value) {
+        return value;
+      }
+    };
+  }
+
   private static Function<? super Boolean, Object> booleanAttributeConverter(final Span span,
       final String tagName) {
     return new Function<Boolean, Object>() {
       @Override
       public Boolean apply(final Boolean value) {
         span.setTag(tagName, value);
+        return value;
+      }
+    };
+  }
+
+  private static Function<? super Boolean, Object> booleanAttributeConverter() {
+    return new Function<Boolean, Object>() {
+      @Override
+      public Boolean apply(final Boolean value) {
         return value;
       }
     };
@@ -192,6 +232,15 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
     };
   }
 
+  private static Function<? super Double, Object> doubleAttributeConverter() {
+    return new Function<Double, Object>() {
+      @Override
+      public String apply(final Double value) {
+        return Double.toString(value);
+      }
+    };
+  }
+
   private static Function<? super Long, Object> longAttributeConverter(final Span span,
       final String tagName) {
     return new Function<Long, Object>() {
@@ -203,12 +252,30 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
     };
   }
 
+  private static Function<? super Long, Object> longAttributeConverter() {
+    return new Function<Long, Object>() {
+      @Override
+      public Long apply(final Long value) {
+        return value;
+      }
+    };
+  }
+
   private static Function<Object, Object> defaultAttributeConverter(final Span span,
       final String tagName) {
     return new Function<Object, Object>() {
       @Override
       public Object apply(final Object value) {
         span.setTag(tagName, value.toString());
+        return value;
+      }
+    };
+  }
+
+  private static Function<Object, Object> defaultAttributeConverter() {
+    return new Function<Object, Object>() {
+      @Override
+      public Object apply(final Object value) {
         return value;
       }
     };
