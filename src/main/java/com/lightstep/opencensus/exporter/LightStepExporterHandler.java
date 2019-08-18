@@ -89,7 +89,7 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
         }
 
         for (TimedEvent<Annotation> annotation : spanData.getAnnotations().getEvents()) {
-          Map<String, Object> fields = new HashMap<>();
+          Map<String, Object> fields = new HashMap<String, Object>();
           fields.put("annotationDescription", annotation.getEvent().getDescription());
           if (annotation.getEvent().getAttributes() != null) {
             for (Entry<String, AttributeValue> entry : annotation.getEvent()
@@ -102,7 +102,7 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
 
         for (TimedEvent<io.opencensus.trace.MessageEvent> messageEvent :
             spanData.getMessageEvents().getEvents()) {
-          Map<String, Object> fields = new HashMap<>();
+          Map<String, Object> fields = new HashMap<String, Object>();
           fields.put("messageEventType", messageEvent.getEvent().getType().name());
           fields.put("compressedMessageSize", messageEvent.getEvent().getCompressedMessageSize());
           fields

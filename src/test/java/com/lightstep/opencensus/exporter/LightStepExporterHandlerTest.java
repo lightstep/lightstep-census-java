@@ -47,7 +47,7 @@ public class LightStepExporterHandlerTest {
     Scope scopedSpan = spanBuilder.startScopedSpan();
 
     String annotation = "test-annotation";
-    Map<String, AttributeValue> attributes = new HashMap<>();
+    Map<String, AttributeValue> attributes = new HashMap<String, AttributeValue>();
     attributes
         .put("annotation-attr-key", AttributeValue.stringAttributeValue("annotation-attr-value"));
     tracer.getCurrentSpan()
