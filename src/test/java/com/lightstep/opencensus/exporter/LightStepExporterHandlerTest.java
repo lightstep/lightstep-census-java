@@ -78,6 +78,8 @@ public class LightStepExporterHandlerTest {
     assertTrue(find(span.getLogsList(), "messageEventType", "SENT"));
     assertTrue(find(span.getLogsList(), "compressedMessageSize", 1));
     assertTrue(find(span.getLogsList(), "uncompressedMessageSize", 2));
+
+    LightStepTraceExporter.unregister();
   }
 
   private Callable<Integer> reportedSpansSize(final ArrayList<Span> spans) {
