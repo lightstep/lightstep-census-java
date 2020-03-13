@@ -25,14 +25,36 @@ pom.xml
 Also add dependencies required for LightStep tracer
 
 ## Usage
+
+### Initialization
 ```java
 // Instantiate LightStep tracer
 JRETracer jreTracer = ... 
 
 // Register the exporter
 LightStepTraceExporter.createAndRegister(jreTracer);
+
+// Optionally configure 100% sample rate, otherwise, few traces will be sampled
+TraceConfig traceConfig = Tracing.getTraceConfig();
+    traceConfig.updateActiveTraceParams(
+        traceConfig.getActiveTraceParams()
+            .toBuilder()
+            .setSampler(Samplers.probabilitySampler(1))
+            .build());
 ```
 
+### Shutdown
+```java
+// To shutdown the exporter
+Tracing.getExportComponent().shutdown();
+
+// Close the tracer, so that it'll flush queued traces
+jreTracer.close();
+```
+
+### Example
+
+There is an [example](./example) which demonstrate basic usage of the exporter. 
 
 ## License
 
