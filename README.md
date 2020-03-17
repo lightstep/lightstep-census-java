@@ -1,4 +1,4 @@
-[![Released Version][maven-img]][maven] [![Apache-2.0 license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Circle CI](https://circleci.com/gh/lightstep/lightstep-census-java.svg?style=shield)](https://circleci.com/gh/lightstep/lightstep-census-java) [![Released Version][maven-img]][maven] [![Apache-2.0 license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # LightStep OpenCensus Trace Exporter
 
