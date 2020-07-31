@@ -16,6 +16,7 @@ import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.MessageEvent;
 import io.opencensus.trace.MessageEvent.Type;
 import io.opencensus.trace.SpanBuilder;
+import io.opencensus.trace.TraceId;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.samplers.Samplers;
@@ -80,6 +81,16 @@ public class LightStepExporterHandlerTest {
     assertTrue(find(span.getLogsList(), "uncompressedMessageSize", 2));
 
     LightStepTraceExporter.unregister();
+  }
+
+  @Test
+  public void traceIdToLong() {
+    LightStepExporterHandler handler = new LightStepExporterHandler(null);
+
+    // right most part of 463ac35c9f6413ad48485a3953bb6124 actually is 5208512171318403364L
+    TraceId traceId = TraceId.fromLowerBase16("463ac35c9f6413ad48485a3953bb6124", 0);
+    long traceIdLong = handler.traceIdToLong(traceId);
+    assertEquals(5208512171318403364L, traceIdLong);
   }
 
   private Callable<Integer> reportedSpansSize(final ArrayList<Span> spans) {

@@ -168,13 +168,14 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
     return ByteBuffer.wrap(bytes).getLong();
   }
 
-  private long traceIdToLong(final TraceId traceId) {
+  long traceIdToLong(final TraceId traceId) {
     if (traceId == null) {
       return 0L;
     }
-    // Attempt to minimise allocations, since SpanId#getBytes currently creates a defensive copy:
+
     traceId.copyBytesTo(traceIdBuffer, 0);
-    return fromByteArray(traceIdBuffer);
+    ByteBuffer buf = ByteBuffer.wrap(traceIdBuffer, TraceId.SIZE / 2, TraceId.SIZE / 2);
+    return buf.getLong();
   }
 
   private static long toEpochMicros(Timestamp timestamp) {
