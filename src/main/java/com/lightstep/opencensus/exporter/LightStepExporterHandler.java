@@ -37,7 +37,6 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
   private static final Tracer tracer = Tracing.getTracer();
   private static final Sampler probabilitySampler = Samplers.probabilitySampler(0.0001);
   private final byte[] spanIdBuffer = new byte[SpanId.SIZE];
-  private final byte[] traceIdBuffer = new byte[TraceId.SIZE];
   private final JRETracer jreTracer;
 
   public LightStepExporterHandler(JRETracer jreTracer) {
@@ -174,9 +173,8 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
       return 0L;
     }
 
-    // Attempt to minimise allocations, since TraceId#getBytes currently creates a defensive copy:
-    traceId.copyBytesTo(traceIdBuffer, 0);
-    ByteString byteString = ByteString.copyFrom(traceIdBuffer, TraceId.SIZE / 2, TraceId.SIZE / 2);
+    byte[] traceIdBytes = traceId.getBytes();
+    ByteString byteString = ByteString.copyFrom(traceIdBytes, TraceId.SIZE / 2, TraceId.SIZE / 2);
 
     return fromByteArray(byteString.toByteArray());
   }
