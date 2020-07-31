@@ -87,8 +87,9 @@ public class LightStepExporterHandlerTest {
   public void traceIdToLong() {
     LightStepExporterHandler handler = new LightStepExporterHandler(null);
 
-    final TraceId traceId = TraceId.fromLowerBase16("463ac35c9f6413ad48485a3953bb6124", 0);
-    final long traceIdLong = handler.traceIdToLong(traceId);
+    // right most part of 463ac35c9f6413ad48485a3953bb6124 actually is 5208512171318403364L
+    TraceId traceId = TraceId.fromLowerBase16("463ac35c9f6413ad48485a3953bb6124", 0);
+    long traceIdLong = handler.traceIdToLong(traceId);
     assertEquals(5208512171318403364L, traceIdLong);
   }
 
