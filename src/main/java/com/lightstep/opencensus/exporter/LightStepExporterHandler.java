@@ -3,7 +3,6 @@ package com.lightstep.opencensus.exporter;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import com.google.protobuf.ByteString;
 import com.lightstep.tracer.jre.JRETracer;
 import com.lightstep.tracer.shared.Span;
 import com.lightstep.tracer.shared.SpanBuilder;
@@ -37,6 +36,7 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
   private static final Tracer tracer = Tracing.getTracer();
   private static final Sampler probabilitySampler = Samplers.probabilitySampler(0.0001);
   private final byte[] spanIdBuffer = new byte[SpanId.SIZE];
+  private final byte[] traceIdBuffer = new byte[TraceId.SIZE];
   private final JRETracer jreTracer;
 
   public LightStepExporterHandler(JRETracer jreTracer) {
@@ -173,10 +173,9 @@ public class LightStepExporterHandler extends SpanExporter.Handler {
       return 0L;
     }
 
-    byte[] traceIdBytes = traceId.getBytes();
-    ByteString byteString = ByteString.copyFrom(traceIdBytes, TraceId.SIZE / 2, TraceId.SIZE / 2);
-
-    return fromByteArray(byteString.toByteArray());
+    traceId.copyBytesTo(traceIdBuffer, 0);
+    ByteBuffer buf = ByteBuffer.wrap(traceIdBuffer, TraceId.SIZE / 2, TraceId.SIZE / 2);
+    return buf.getLong();
   }
 
   private static long toEpochMicros(Timestamp timestamp) {
